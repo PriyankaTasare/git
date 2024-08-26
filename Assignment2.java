@@ -1,47 +1,56 @@
-package AdvanceUserInteractions;
+package BrowsweActomationAssignment;
 
 
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.util.Set;
 
 public class Assignment2 {
     public static void main(String[] args) {
+        // Set the path to the ChromeDriver executable
 
 
-        // Create a new instance of the Chrome driver
+        // Launch Chrome browser
         WebDriver driver = new ChromeDriver();
 
-        try {
-            // Step 1: Launch Chrome browser
-            driver.manage().window().maximize();
+        // Maximize the browser window
+        driver.manage().window().maximize();
 
-            // Step 2: Open test URL
-            driver.get("http://only-testing-blog.blogspot.com/2014/09/selectable.html");
+        // Go to the test URL
+        driver.get("https://netbanking.hdfcbank.com/netbanking/");
 
-            // Step 3: Double click on Double-Click Me to see Alert Button to generate Alert
-            WebElement doubleClickButton = driver.findElement(By.xpath("//button[text()='Double-Click Me To See Alert']"));
-            Actions action = new Actions(driver);
-            action.doubleClick(doubleClickButton).perform();
+        // Get the title of the page
+        String title1 = driver.getTitle();
+        System.out.println("Page Title (0th window): " + title1);
 
+        driver.switchTo().frame("login_page");
 
+        driver.findElement(By.xpath("//*[@id=\"nortonimg1\"]/div[2]/span[2]/a")).click();
+        driver.getWindowHandle();
 
-            // Step 4: Accept Alert
-            Alert alert = driver.switchTo().alert();
-            alert.accept();
-
-            // Add a wait if necessary
-            Thread.sleep(2000);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            // Step 5: Close browser
-           // driver.quit();
+        String mainWindowHandle = driver.getWindowHandle();
+        Set<String> allWindowHandles = driver.getWindowHandles();
+        for (String handle : allWindowHandles) {
+            if (!handle.equals(mainWindowHandle)) {
+                driver.switchTo().window(handle);
+                break;
+            }
         }
-    }
 
+        System.out.println("Page title is : " + driver.getTitle());
+
+        driver.switchTo().window(mainWindowHandle);
+        System.out.println("Page title is : " + driver.getTitle());
+
+
+
+        // Close the 0th window
+        driver.close();
+
+
+    }
 }

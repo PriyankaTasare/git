@@ -1,44 +1,63 @@
-package AdvanceUserInteractions;
+package BrowsweActomationAssignment;
+
+
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+
+import java.util.ArrayList;
+import java.util.Set;
 
 public class Assignment4 {
     public static void main(String[] args) {
+        // Set the path to the ChromeDriver executable
 
 
-        // Initialize the Chrome browser
+        // Launch Chrome browser
         WebDriver driver = new ChromeDriver();
 
-        try {
-            // Step 2: Open the test URL
-            driver.get("http://only-testing-blog.blogspot.com/2014/09/selectable.html");
+        // Maximize the browser window
+        driver.manage().window().maximize();
 
-            // Step 3: Drag the slider up to 50%
-            WebElement slider = driver.findElement(By.xpath("//input[@type='range']"));
+        // Go to the test URL
+        driver.get("https://netbanking.hdfcbank.com/netbanking/");
 
-            // Get the width of the slider
-            int width = slider.getSize().getWidth();
+        // Get the title of the page
+        String title1 = driver.getTitle();
+        System.out.println("Page Title (0th window): " + title1);
 
-            // Calculate the target location (50% of the width)
-            int xOffset = (int) (width * 0.5);
+        driver.switchTo().frame("login_page");
 
-            // Create an Actions object
-            Actions actions = new Actions(driver);
+        driver.findElement(By.xpath("//*[@id=\"nortonimg1\"]/div[2]/span[2]/a")).click();
+        driver.getWindowHandle();
 
-            // Drag the slider to the calculated location
-            actions.dragAndDropBy(slider, xOffset - slider.getLocation().getX(), 0).perform();
-
-            // Step 4: Close the browser
-            driver.quit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Ensure the browser is closed even if an exception occurs
-            driver.quit();
+        String mainWindowHandle = driver.getWindowHandle();
+        Set<String> allWindowHandles = driver.getWindowHandles();
+        for (String handle : allWindowHandles) {
+            if (!handle.equals(mainWindowHandle)) {
+                driver.switchTo().window(handle);
+                break;
+            }
         }
-    }
 
+        System.out.println("Page title is : " + driver.getTitle());
+
+
+
+        // Close the 1th window
+        driver.close();
+
+     // TC-9 after switching get the title of page
+        driver.switchTo().window(mainWindowHandle);
+        System.out.println("Page title is : " + driver.getTitle());
+
+        // Close the 0th window
+        driver.quit();
+
+
+    }
 }
